@@ -1,0 +1,24 @@
+html { height: 100% }
+body { height: 100%; background-color:#CCC; }
+
+#main, #main>.row {
+	height:100%;
+}
+
+/*#main>.row {
+    overflow-y:scroll;
+}*/
+
+#left {
+	height:100%;
+}
+
+#map-canvas {
+	width:66.6666%;
+    height:calc(100% - 0);
+    position:absolute;
+    right:16px;
+    top:50px;
+    bottom:0;
+    overflow:hidden;
+}
