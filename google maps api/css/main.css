@@ -1,13 +1,30 @@
-html { height: 100% }
-body { height: 100%; background-color:#CCC; }
+html, body {
+	height: 100%;
+}
+
+body {
+	padding-top: 50px;
+}
+
+.navbar-custom .icon-bar {
+	background-color: #fff;
+}
+
+.navbar-custom {
+	background-color: #1a1a1a;
+	color: #fff; 
+}
+.navbar-custom a{
+    color:#fff;
+}
 
 #main, #main>.row {
 	height:100%;
 }
 
-/*#main>.row {
+#main>.row {
     overflow-y:scroll;
-}*/
+}
 
 #left {
 	height:100%;
