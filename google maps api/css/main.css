@@ -31,7 +31,7 @@ body {
 }
 
 #map-canvas {
-	width:66.6666%;
+	width:66.666%;
     height:calc(100% - 0);
     position:absolute;
     right:16px;
