@@ -6,10 +6,14 @@
 		<title>Neighborhood map</title>
 	</head>
 	<body>
-		<div id="map-canvas">
-			<div class=""></div>
+		<div id="map-canvas"></div>
+		<div class="location-search">
+			<form id="searchbox">
+				<input id="search" type="text" placeholder="Search location">
+				<input id="submit" type="submit" value="Search">
+			</form>
 		</div>
-		
+
 		<script type="text/javascript" src="bower_components\jquery\dist\jquery.min.js"></script>
 		<script type="text/javascript" src="bower_components\knockout\dist\knockout.js"></script>
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
