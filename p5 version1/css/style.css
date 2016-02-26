@@ -15,9 +15,9 @@ body{
 	z-index: 0;
 }
 
-.location-search {
+/*.location-search {
 	right: 0;
-}
+}*/
 #searchbox {
 	position: relative;
 	float: right;
@@ -27,13 +27,13 @@ body{
     border-radius: 35px;    
     border-width: 1px;
     border-style: solid;
-    border-color: #c4d9df #a4c3ca #83afb7;            
+    border-color: #c4d9df #a4c3ca #83afb7;
     width: 350px;
     height: 35px;
     padding: 5px;
     margin: 40px auto 10px;
-    opacity: 0.8;
-    overflow: hidden; /* Clear floats */
+    opacity: 0.9;
+    overflow: hidden;  /*Clear floats */
 }
 
 #search,
@@ -76,6 +76,27 @@ body{
     background-color: #95d788;
     background-image: linear-gradient(#6cbb6b, #95d788);
 }
+.location-list {
+	width: 100%;
+	height: 100%;
+}
+#locations {
+	position: absolute;
+	float: right;
+	right: 0;
+	width: 350px;
+	height: 400px;
+	background-color: #eaf8fc;
+    background-image: linear-gradient(#fff, #d4e8ec);
+	border-width: 1px;
+	border-style: solid;
+	border-color: #c4d9df #a4c3ca #83afb7;
+	margin-top: 100px;
+	margin-right: 5px;
+	padding-right: 10px;
+	opacity: 0.9;
+	overflow: scroll;
+}
 
 @media (max-width: 330px) {
 	#searchbox {
@@ -86,4 +107,9 @@ body{
 		width: 180px;
 	}
 }
-	
+
+@media (max-width: 450px){
+	#locations {
+		display: none;
+	}
+}
