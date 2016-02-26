@@ -1,13 +1,12 @@
-var map;    // declares a global map variable
 
-var locations = ['hard rock cafe, bangalore', 'amoeba, church street, bangalore','matteo, church street, bangalore', 'social, church street, bangalore','chutney chang, museum road', 'bowring institue, bangalore'];
+var map;
 /*
 Start here! initializeMap() is called when page is loaded.
 */
 function initializeMap() {
 
   var mapOptions = {
-    zoom: 14,
+    zoom: 8,
   };
 
   map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
@@ -22,7 +21,7 @@ function initializeMap() {
     // The next lines save location data from the search result object to local variables
     var lat = placeData.geometry.location.lat();  // latitude from the place service
     var lon = placeData.geometry.location.lng();  // longitude from the place service
-    var name = placeData.formatted_address;   // name of the place from the place service
+    var name = placeData.name;   // name of the place from the place service
     var bounds = window.mapBounds;            // current boundaries of the map window
 
     // marker is an object with additional data about the pin for a single location
@@ -40,9 +39,7 @@ function initializeMap() {
       content: name
     });
 
-    // hmmmm, I wonder what this is about...
     google.maps.event.addListener(marker, 'click', function() {
-      // your code goes here!
       infoWindow.open(map, marker);
     });
 
@@ -61,15 +58,17 @@ function initializeMap() {
   */
   function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-      console.log("create marker");
-      createMapMarker(results[0]);
+      for(var i = 0; i < results.length; i++) {
+        console.log("create marker", results);
+        createMapMarker(results[i]);
+      }
     }
     else
       console.log("place not found");
   }
 
   /*
-  pinPoster(locations) takes in the array of locations created by locationFinder()
+  pinPoster(locations) takes in the array of locations
   and fires off Google place searches for each location
   */
   function pinPoster(locations) {
@@ -78,18 +77,20 @@ function initializeMap() {
     // actually searching for location data.
     var service = new google.maps.places.PlacesService(map);
 
+    var bangalore = new google.maps.LatLng(12.978825, 77.599719);
     // Iterates through the array of locations, creates a search object for each location
-    for (var place in locations) {
-console.log("create search object for each location");
+    //for (var place in locations) {
       // the search request object
       var request = {
-        query: locations[place]
+        location: bangalore,
+        radius: 1000,
+        types: ['book_store', 'art_gallery','beauty_salon','bar']
       };
 
       // Actually searches the Google Maps API for location data and runs the callback
       // function with the search results after each search.
-      service.textSearch(request, callback);
-    }
+      service.nearbySearch(request, callback);
+    //}
   }
 
   // Sets the boundaries of the map based on pin locations
@@ -109,3 +110,16 @@ window.addEventListener('resize', function(e) {
   //Make sure the map bounds get updated on page resize
 map.fitBounds(mapBounds);
 });
+
+var locations = ['hard rock cafe, bangalore', 'amoeba, church street, bangalore','matteo, church street, bangalore', 'social, church street, bangalore','chutney chang, museum road', 'bowring institue, bangalore', 'st. marks cathedral, bangalore', 'm chinnaswamy stadium, bangalore', 'high court of karnataka, bangalore', 'ulsoor lake pathway, bangalore'];
+
+var ViewModel = function() {
+  var self = this;
+  this.locationList = ko.observableArray([]);
+  locations.forEach(function(loc){
+    self.locationList.push(loc);
+  });
+
+};
+
+ko.applyBindings(new ViewModel());
