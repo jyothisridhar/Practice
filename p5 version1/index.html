@@ -14,9 +14,9 @@
 			</form>			
 		</div>
 		<div class="location-list">
-			<div id="locations" data-bind="foreach: locationList">
-				<div>
-					<p data-bind="text: $data"></p>
+			<div id="locations" data-bind="foreach: visibleLocations">
+				<div class="loc" data-bind="click: $parent.showLocation">
+					<p data-bind="text: locationName"></p>
 				</div>
 				<hr>
 			</div>

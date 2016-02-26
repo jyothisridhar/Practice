@@ -22,8 +22,7 @@ body{
 	position: relative;
 	float: right;
 	z-index: 1;
-    background-color: #eaf8fc;
-    background-image: linear-gradient(#fff, #d4e8ec);
+    background-color: #045aa9;
     border-radius: 35px;    
     border-width: 1px;
     border-style: solid;
@@ -31,7 +30,7 @@ body{
     width: 350px;
     height: 35px;
     padding: 5px;
-    margin: 40px auto 10px;
+    margin: 30px auto 10px;
     opacity: 0.9;
     overflow: hidden;  /*Clear floats */
 }
@@ -91,13 +90,19 @@ body{
 	border-width: 1px;
 	border-style: solid;
 	border-color: #c4d9df #a4c3ca #83afb7;
-	margin-top: 100px;
+	margin-top: 90px;
 	margin-right: 5px;
 	padding-right: 10px;
 	opacity: 0.9;
-	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
+.loc {
+	width: 340px;
+	height: 30px;
+	padding: 5px;
+}
 @media (max-width: 330px) {
 	#searchbox {
 		width: 100%;

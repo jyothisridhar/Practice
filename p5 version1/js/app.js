@@ -1,52 +1,114 @@
-var locations = ['hard rock cafe, bangalore', 'amoeba, church street, bangalore','matteo, church street, bangalore', 'social, church street, bangalore','chutney chang, museum road', 'bowring institue, bangalore', 'st. marks cathedral, bangalore', 'm chinnaswamy stadium, bangalore', 'high court of karnataka, bangalore', 'ulsoor lake pathway, bangalore'];
+//Initial location data
+//To do : may not require marker (?)
+var locations = [{
+        name: 'hard rock cafe, bangalore',
+        marker: null
+      },
+      {
+        name: 'Church street Social, bangalore',
+        marker: null
+      },
+      {
+        name: 'chutney chang, museum road, bangalore',
+        marker: null
+      },
+      {
+        name: 'bowring institue, bangalore',
+        marker: null
+      },
+      {
+        name: 'st. marks cathedral,bangalore',
+        marker: null
+      },
+      {
+        name: 'm chinnaswamy stadium, bangalore',
+        marker: null
+      },
+      {
+        name: 'high court of karnataka, bangalore',
+        marker: null
+      }];
+
 
 var ViewModel = function() {
   var self = this;
-  this.locationList = ko.observableArray([]);
-  locations.forEach(function(loc){
-    self.locationList.push(loc);
+
+  var Place = function(placeObj){
+    this.locationName = placeObj.name;
+    this.marker = null;
+  };
+
+  this.map = new google.maps.Map(document.getElementById('map-canvas'), {
+    center: {lat: 12.978825, lng: 77.599719},
+    zoom: 8
   });
-};
 
-var map;
-function initializeMap() {
-    var mapOptions = {
-      zoom: 8,
-    };
+  this.allLocations = [];
 
-    map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
+  locations.forEach(function(place){
+    self.allLocations.push(new Place(place));
+  });
 
-    /*
-    createMapMarker(placeData) reads Google Places search results to create map pins.
-    placeData is the object returned from search results containing information
-    about a single location.
+  this.allLocations.forEach(function(place){
+    console.log(place.locationName);
+    // self.pinPoster(place);
+  });
+  /*
+    pinPoster(locations) takes in the array of locations
+    and fires off Google place searches for each location
     */
-    function createMapMarker(placeData) {
+  this.pinPoster = function(place){
+
+    // creates a Google place search service object. PlacesService does the work of
+    // actually searching for location data.
+    var service = new google.maps.places.PlacesService(map);
+
+    // var bangalore = new google.maps.LatLng(12.978825, 77.599719);
+    // //creates a search object for each location
+    // var request = {
+    //   location: bangalore,
+    //   radius: 800,
+    //   types: ['book_store', 'art_gallery','beauty_salon','bar']
+    // };
+
+    //service.nearbySearch(request, callback);
+
+    //search request for default locations
+    var requestDefault = {
+      query: place.locationName
+    };
+    // Actually searches the Google Maps API for location data and runs the callback
+    // function with the search results after each search.
+    service.textSearch(requestDefault, function(results, status) {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+          self.createMapMarker(results[0],place);
+      }
+    })
+  };
+
+  this.createMapMarker = function(placeData, placeObj) {
       var lat = placeData.geometry.location.lat();  // latitude from the place service
       var lon = placeData.geometry.location.lng();  // longitude from the place service
       var name = placeData.name;   // name of the place from the place service
       var bounds = window.mapBounds;            // current boundaries of the map window
 
       // marker is an object with additional data about the pin for a single location
-      var marker = new google.maps.Marker({
+      placeObj.marker = new google.maps.Marker({
         map: map,
         position: placeData.geometry.location,
         title: name,
         animation: google.maps.Animation.DROP,
       });
 
-      // infoWindows are the little helper windows that open when you click
-      // or hover over a pin on a map. They usually contain more information
-      // about a location.
       var infoWindow = new google.maps.InfoWindow({
         content: name
       });
 
-      google.maps.event.addListener(marker, 'click', function() {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
+      google.maps.event.addListener(placeObj.marker, 'click', function() {
+        placeObj.marker.setAnimation(google.maps.Animation.BOUNCE);
         infoWindow.open(map, marker);
         setTimeout(function() {
-          marker.setAnimation(null)
+          placeObj.marker.setAnimation(null)
         }, 1000);
       });
 
@@ -57,64 +119,36 @@ function initializeMap() {
       map.fitBounds(bounds);
       // center the map
       map.setCenter(bounds.getCenter());
+  };
+
+  this.visibleLocations = ko.observableArray();
+
+  this.allLocations.forEach(function(place){
+    self.visibleLocations.push(place);
+  });
+
+  this.showLocation = function(markerLocation){
+    console.log("marker: ", markerLocation);
+    self.clearMarkers();
+    // markerLocation.setMap(map);
+  };
+
+  this.clearMarkers = function(){
+    self.setMapOnAll(null);
+  };
+
+  this.setMapOnAll = function(map) {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(map);
     }
+  };
 
-    /*
-    callback(results, status) makes sure the search returned results for a location.
-    If so, it creates a new map marker for that location.
-    */
-    function callback(results, status) {
-      if (status == google.maps.places.PlacesServiceStatus.OK) {
-        for(var i = 0; i < results.length; i++) {
-          console.log("create marker", results);
-          createMapMarker(results[i]);
-        }
-      }
-      else
-        console.log("place not found");
-    }
-
-    /*
-    pinPoster(locations) takes in the array of locations
-    and fires off Google place searches for each location
-    */
-    function pinPoster(locations) {
-
-      // creates a Google place search service object. PlacesService does the work of
-      // actually searching for location data.
-      var service = new google.maps.places.PlacesService(map);
-
-      var bangalore = new google.maps.LatLng(12.978825, 77.599719);
-      // Iterates through the array of locations, creates a search object for each location
-      //for (var place in locations) {
-        // the search request object
-        var request = {
-          location: bangalore,
-          radius: 800,
-          types: ['book_store', 'art_gallery','beauty_salon','bar']
-        };
-
-        // Actually searches the Google Maps API for location data and runs the callback
-        // function with the search results after each search.
-        service.nearbySearch(request, callback);
-      //}
-    }
-
-    // Sets the boundaries of the map based on pin locations
-    window.mapBounds = new google.maps.LatLngBounds();
-
-    // pinPoster(locations) creates pins on the map for each location in
-    // the locations array
-    pinPoster(locations);
-}
-// Calls the initializeMap() function when the page loads
-window.addEventListener('load', initializeMap);
-
-// Vanilla JS way to listen for resizing of the window
-// and adjust map bounds
-window.addEventListener('resize', function(e) {
-  //Make sure the map bounds get updated on page resize
-map.fitBounds(mapBounds);
-});
+  window.mapBounds = new google.maps.LatLngBounds();
+  window.addEventListener('resize', function(e) {
+    //Make sure the map bounds get updated on page resize
+    this.map.fitBounds(mapBounds);
+  }); 
+};
 
 ko.applyBindings(new ViewModel());
+
